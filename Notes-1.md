@@ -68,3 +68,51 @@ Key Features are:
 - Data Model
 - Query Language(PromQL)
 - Independent Operation 
+- Data Collection Method
+- Target Discovery
+- Visualization
+
+To start prometheus service(in ubuntu)
+```bash
+$ sudo service prometheus start
+```
+Please go to browser and check http://localhost:9090
+
+Go to prometheus folder and please see the content of the prometheus.yml which is the configuration file of the prometheus.
+```bash
+$ cat prometheus.yml
+```
+
+## Running Prometheus as a Docker Container for Monitoring
+1. **Pull and set up Docker environment**
+```bash
+$ sudo docker pull prom/prometheus
+```
+2. Execute the following command on the terminal to create a Docker network
+```bash
+$ sudo docker network create prometheus-net 
+```
+3. Run the following commands to create a new directory named prometheus-docker, store the Prometheus configuration file in it.
+```bash
+$ mkdir prometheus-docker
+$ cd prometheus-docker/
+$ sudo vim prometheus.yml
+```
+Copy and paste the following content and save the file.
+```YAML
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']  
+```
+4. Start the Prometheus container
+```bash
+$ sudo docker run -d -p 9090:9090 --name prometheus --network prometheus-net -v prometheus.yml prom/prometheus
+$ sudo docker ps
+```
+
+5. 4: Access the Prometheus web interface
+Open the browser and enter the URL http://localhost:9090
