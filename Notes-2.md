@@ -57,3 +57,21 @@ $ sudo prometheus --config.file=prom-node-exporter.yaml
 ```
 - Access Node Exporter metrics using Prometheus UI(http://localhost:9090)
 
+## Writing Basic Queries in PromQL
+- Navigate to the browser and enter the URL http://localhost:9090/ or http://<public-ip>:9090/ to access the Prometheus console
+- Navigate to the Graph section
+- Enter the following query in the expression browser to retrieve a single metric, then click on Execute:**node_cpu_seconds_total**
+- Filter by label : **node_filesystem_avail_bytes{device='/dev/root'}**
+    - **node_filesystem_avail_bytes**: This metric represents the number of available bytes on the filesystem. It's commonly used to monitor disk space.
+    - **{device="/dev/"}**: This filter selects only those metrics where the device label is exactly equal to "/dev/".
+- Aggregate data with the sum() function: **sum(node_network_transmit_bytes_total)**
+    - **node_network_transmit_bytes_total**: This metric represents the total number of bytes transmitted over all network interfaces since the system started.
+    - **sum(...)**: Aggregates the total transmitted bytes across all instances and network interfaces
+- Query data using an arithmetic operation:**node_memory_MemAvailable_bytes/1024/1024**
+    - **node_memory_MemAvailable_bytes**: This metric gives the amount of memory available for new allocations in bytes.
+    - **/1024/1024**: Divides the value by 1024 twice to convert bytes into megabytes (MB).
+- Calculate a metric using the rate() function: **rate(node_network_receive_bytes_total[1m])** 
+    - **node_network_receive_bytes_total**: This metric represents the total number of bytes received on all network interfaces since the system started (a cumulative counter).
+    - **rate(...)**: Calculates the per-second rate of change (bytes per second) for the specified metric over the given time range.
+    - **[1m]**: Specifies a time window of 1 minute to calculate the rate of incoming traffic.
+
